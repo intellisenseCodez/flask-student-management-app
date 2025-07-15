@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 load_dotenv()
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL") # load SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 CORS(app) # cross-origin request security
@@ -17,4 +17,5 @@ CORS(app) # cross-origin request security
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from app import routes, models
+from app.models import student, course, studentcourse
+from app.routes import student_api, course_api

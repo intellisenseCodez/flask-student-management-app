@@ -5,7 +5,26 @@ from app import db
 
 class Student(db.Model):
     """
-    Represents a student information.
+    Represents a student's personal and academic information.
+
+    Each student has identifying details such as full name, age, gender, and email.
+    The student is linked to courses through the `StudentCourse` association table,
+    enabling a many-to-many relationship.
+
+    Attributes:
+        id (int): Primary key of the student.
+        full_name (str): Full name of the student.
+        age (int): Age of the student.
+        gender (Enum): Gender of the student; either "Male" or "Female".
+        email (str, optional): Email address of the student.
+        created_at (datetime): Timestamp of when the student record was created.
+        updated_at (datetime): Timestamp of the last update to the student record.
+
+    Relationships:
+        courses (list[StudentCourse]): The list of student-course enrollment associations.
+
+    Methods:
+        __repr__(): Returns a string representation of the Student object.
     """
     __tablename__ = "students"
 
@@ -28,8 +47,7 @@ class Student(db.Model):
     )
 
     def __repr__(self) -> str:
-        """Provides a friendly representation of the student."""
+        """Provides a friendly string representation of the student."""
         return (
-            f"Student(id={self.id!r}, name={self.name!r}, "
-            f"age={self.age!r}, email={self.email!r})"
-        )
+            f"Student(id={self.id!r}, full_name={self.full_name!r}, "
+            f"age={self.age!r}, email={self.email!r})")

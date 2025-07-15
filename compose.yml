@@ -3,38 +3,35 @@ services:
   # backend service
   backend:
     container_name: flask-student-api
+    restart: always
     image: ${USERNAME}/flask-student-api:v1.0
     build:
       context: ./backend
       dockerfile: flask.dockerfile
     ports:
       - 8080:8080
+    env_file: ".env"
     environment:
-      # - DATABASE_URL=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
-      - ./prod.env
+      - DATABASE_URL=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
     depends_on:
       - database
+
 
   # database service
   database:
     container_name: mysql-database
-    restart: always
     image: mysql:5.7
+    env_file: ".env"
     environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - 3307:3306
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 20s
-      retries: 10
+  
 
   # frontend service
 

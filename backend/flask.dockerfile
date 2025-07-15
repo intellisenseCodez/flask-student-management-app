@@ -3,8 +3,7 @@ FROM python:3.11-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    FLASK_APP=app.py
+    PYTHONUNBUFFERED=1
     
 
 # Set working directory
@@ -18,21 +17,31 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Install mysqladmin
+RUN apt-get update && \
+    apt-get install -y default-mysql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install Python dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
 COPY . .
 
 
-# Ensure wait script is executable
-RUN chmod +x ./wait-for-mysql.sh
+# Copy the MySQL wait script into the container
+COPY wait-for-mysql.sh .
+
+# Make the wait script executable
+RUN chmod +x wait-for-mysql.sh
 
 # Expose the application port
 EXPOSE 8080
 
-# Default command (runs wait + db upgrade + flask server)
-CMD /wait-for-mysql.sh && flask db upgrade && gunicorn app:app -b 0.0.0.0:8080 --workers 4 --timeout 120
+
+# run app
+CMD ["sh", "-c", "flask db upgrade && flask run --host=0.0.0.0 --port=8080"]
+
 
 
