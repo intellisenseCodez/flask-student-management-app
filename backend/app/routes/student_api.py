@@ -4,7 +4,7 @@ from werkzeug.exceptions import BadRequest, Conflict, NotFound
 from app import app, db
 from app.models.student import Student
 from app.models.course import Course
-from app.models.studentcourse import StudentCourse
+from app.models.enrollment import Enrollment
 
 @app.route("/")
 def hello_world():
@@ -214,8 +214,8 @@ def get_students_by_course():
             if not course:
                 raise NotFound("Course not found")
         
-        # join Student and StudentCourse to filter out where records matches selected course title
-        students = Student.query.join(StudentCourse).filter(
+        # join Student and Enrollment to filter out where records matches selected course title
+        students = Student.query.join(Enrollment).filter(
             Course.title.in_(course_titles)
         ).distinct().all()
         

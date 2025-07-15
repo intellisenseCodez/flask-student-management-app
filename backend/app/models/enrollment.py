@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from app import db
     
 
-class StudentCourse(db.Model):
+class Enrollment(db.Model):
     """
     Represents the association between a student and a course in a many-to-many relationship.
 
@@ -22,7 +22,7 @@ class StudentCourse(db.Model):
         student (Student): The student associated with this record.
         course (Course): The course associated with this record.
     """
-    __tablename__ = 'student_course'
+    __tablename__ = 'enrollments'
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
@@ -37,4 +37,4 @@ class StudentCourse(db.Model):
 
     def __repr__(self) -> str:
         """Provides a friendly representation of the course."""
-        return f"StudentCourse(studentID={self.student_id!r}, courseID={self.course_id!r})"
+        return f"Enrollment(studentID={self.student_id!r}, courseID={self.course_id!r})"

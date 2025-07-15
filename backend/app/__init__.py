@@ -17,5 +17,5 @@ CORS(app) # cross-origin request security
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from app.models import student, course, studentcourse
+from app.models import student, course, enrollment
 from app.routes import student_api, course_api

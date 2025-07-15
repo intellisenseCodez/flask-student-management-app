@@ -4,7 +4,7 @@ from werkzeug.exceptions import BadRequest, Conflict, NotFound
 from app import app, db
 from app.models.student import Student
 from app.models.course import Course
-from app.models.studentcourse import StudentCourse
+from app.models.enrollment import Enrollment
 
 
 @app.route("/api/v1.0/course/create", methods=['POST'])
@@ -211,7 +211,7 @@ def add_course_to_student(user_id:int):
             raise NotFound("Student not found")
         
         # Check if the student is already enrolled in this course
-        existing_enrollment = StudentCourse.query.filter_by(
+        existing_enrollment = Enrollment.query.filter_by(
             student_id=user_id,
             course_id=course.id
         ).first()
@@ -220,7 +220,7 @@ def add_course_to_student(user_id:int):
             raise Conflict("Student is already enrolled in this course.")
 
         # Enroll student in the course
-        enrollment = StudentCourse(student_id=user_id, course_id=course.id)
+        enrollment = Enrollment(student_id=user_id, course_id=course.id)
         db.session.add(enrollment)
         db.session.commit()
 
@@ -248,8 +248,8 @@ def get_student_courses(student_id):
     try:
         student = Student.query.get_or_404(student_id)
 
-        # Fetch all associated courses via StudentCourse
-        student_courses = StudentCourse.query.filter_by(student_id=student.id).all()
+        # Fetch all associated courses via Enrollment
+        student_courses = Enrollment.query.filter_by(student_id=student.id).all()
 
         if not student_courses:
             return jsonify({"message": "Student is not enrolled in any courses."}), 200

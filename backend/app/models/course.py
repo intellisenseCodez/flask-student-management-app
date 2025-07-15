@@ -31,9 +31,9 @@ class Course(db.Model):
     code = db.Column(db.String(10), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
     
-    # Relationship to Student through StudentCourse
+    # Relationship to Student through Enrollment
     students = db.relationship(
-        'StudentCourse',
+        'Enrollment',
         back_populates='course',
         cascade='all, delete-orphan',
         lazy="dynamic"
