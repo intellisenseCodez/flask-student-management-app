@@ -3,7 +3,7 @@ name: Build and Deploy Flask API to DockerHub
 
 on:
     workflow_dispatch:
-        
+
     push:
         branches:
             - master
@@ -72,10 +72,10 @@ jobs:
             - name: Send failed email notification
               uses: dawidd6/action-send-mail@v6
               with:
-                server_address: smtp.gmail.com
-                server_port: 465
-                username: ${{ secrets.MAIL_USERNAME}}
-                password: ${{ secrets.MAIL_PASSWORD }}
+                server_address: smtp.gmail.com # smtp host
+                server_port: 465 # smtp port
+                username: ${{ secrets.MAIL_USERNAME }} # username
+                password: ${{ secrets.MAIL_PASSWORD }} # password
                 subject: Flask Docker Deployment Successfull
                 to: ${{ secrets.RECEIVER_EMAIL_ADDERESS }}
                 from: ${{ secrets.SENDER_EMAIL_ADDERESS }}
