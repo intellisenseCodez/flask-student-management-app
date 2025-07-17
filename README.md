@@ -8,6 +8,7 @@ This project demonstrates a three-tier architecture using:
 
 It showcases full-stack application development, container orchestration, and production-aligned patterns like service health checks, environment-based configuration, and database migrations.
 
+
 ## 🎯 Objectives
 - Build a clean separation of concerns using a three-tier model.
 - Implement Flask APIs to handle core business logic and persistence.
