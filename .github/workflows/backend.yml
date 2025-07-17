@@ -43,6 +43,8 @@ jobs:
               with:
                 server_address: smtp.gmail.com
                 server_port: 465
+                username: ${{ secrets.MAIL_USERNAME}}
+                password: ${{ secrets.MAIL_PASSWORD }}
                 subject: Flask Docker Deployment Successfull
                 to: ${{ secrets.RECEIVER_EMAIL_ADDERESS }}
                 from: ${{ secrets.SENDER_EMAIL_ADDERESS }}
