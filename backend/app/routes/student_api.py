@@ -8,7 +8,7 @@ from app.models.enrollment import Enrollment
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World! a new text</p>"
+    return "<p>Hello, World!</p>"
 
 
 @app.route("/api/v1.0/student/create", methods=['POST'])
