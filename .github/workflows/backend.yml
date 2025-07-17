@@ -1,5 +1,5 @@
 
-name: Build and Deploy to Dockerhub
+name: Build and Deploy Flask API to DockerHub
 
 on:
     push:
@@ -7,11 +7,11 @@ on:
             - master
         paths:
             - 'backend/**' # when a change is make to the backend
-            - '.github/workflows/**' # when a change is made to the workflow
+            - '.github/workflows/backend.yml' # when a change is made to the workflow
 
 jobs:
-    backend-deploy:
-        name: Build and deploy backend microservice
+    build-and-deploy:
+        name: Build and deploy Docker Image
         runs-on: ubuntu-latest
 
         steps:
@@ -19,12 +19,15 @@ jobs:
               uses: actions/checkout@v4
 
 
-            - name: Build Docker image
+            - name: Build Flask Docker image
               run: |
-                docker build --file backend/flask.dockerfile -t horlar/flask-student-api:v1.0 backend
+                docker build --file backend/flask.dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/flask-student-api:v1.0 backend
 
-            - name: Docker Login (use secrets)
-              run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
 
             - name: Docker Push
               run: |
