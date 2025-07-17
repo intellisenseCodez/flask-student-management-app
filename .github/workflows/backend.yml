@@ -19,7 +19,7 @@ jobs:
 
             - name: Build Docker image
               run: |
-                docker build --file ./flask.dockerfile -t horlar/flask-student-api:v1.0 backend
+                docker build --file backend/flask.dockerfile -t horlar/flask-student-api:v1.0 backend
 
             - name: Docker Login (use secrets)
               run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${ secrets.DOCKERHUB_TOKEN }}
