@@ -16,14 +16,12 @@ jobs:
             - name: Checkout code 
               uses: actions/checkout@v4
 
-            - name: list directory
-              run: |
-               ls -ltr
-               ls ./backend
+            - name: change directory
+              run: cd backend
 
             - name: Build Docker image
               run: |
-                docker build --file ./backend/flask.dockerfile -t horlar/flask-student-api:v1.0 .
+                docker build --file ./flask.dockerfile -t horlar/flask-student-api:v1.0 .
 
             - name: Docker Login (use secrets)
               run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${ secrets.DOCKERHUB_TOKEN }}
