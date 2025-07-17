@@ -6,7 +6,8 @@ on:
         branches:
             - master
         paths:
-            - 'backend/*'
+            - 'backend/**' # when a change is make to the backend
+            - '.github/workflows/**' # when a change is made to the workflow
 
 jobs:
     backend-deploy:
