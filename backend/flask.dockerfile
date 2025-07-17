@@ -23,7 +23,7 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY ./requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
@@ -31,7 +31,7 @@ COPY . .
 
 
 # Copy the MySQL wait script into the container
-COPY wait-for-mysql.sh .
+COPY ./wait-for-mysql.sh .
 
 # Make the wait script executable
 RUN chmod +x wait-for-mysql.sh
