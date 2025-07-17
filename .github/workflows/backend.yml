@@ -2,7 +2,8 @@
 name: Build and Deploy Flask API to DockerHub
 
 on:
-    [workflow_dispatch]
+    workflow_dispatch:
+        
     push:
         branches:
             - master
