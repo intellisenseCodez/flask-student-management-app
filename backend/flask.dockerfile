@@ -31,10 +31,10 @@ COPY . .
 
 
 # Copy the MySQL wait script into the container
-COPY ./wait-for-mysql.sh .
+# COPY ./wait-for-mysql.sh .
 
 # Make the wait script executable
-RUN chmod +x wait-for-mysql.sh
+# RUN chmod +x wait-for-mysql.sh
 
 # Set environment variables for Flask
 ENV FLASK_APP=main.py
