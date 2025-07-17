@@ -2,8 +2,8 @@
 
 ## 📌 Overview
 This project demonstrates a three-tier architecture using:
-- **Backend**: Flask (Python) REST API
-- **Database**: MySQL
+- **Backend**: Flask (Python web framework), SQLAlchemy (ORM)
+- **Database**: MySQL (database)
 - **Frontend**: Next.js (React-based SSR framework)
 
 It showcases full-stack application development, container orchestration, and production-aligned patterns like service health checks, environment-based configuration, and database migrations.

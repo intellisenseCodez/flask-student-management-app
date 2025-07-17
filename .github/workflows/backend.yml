@@ -1,0 +1,25 @@
+
+name: Build and Deploy to Dockerhub
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - "./backend/**"
+
+jobs:
+    backend-deploy:
+        name: Build and deploy backend microservice
+        runs-on: [self-hosted]
+
+        steps:
+            - name: Checkout code 
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+
+            - name: test
+              run: echo "This is working for me"
+
+
