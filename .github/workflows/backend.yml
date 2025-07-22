@@ -1,6 +1,8 @@
 
+# Workflow
 name: Build and Deploy Flask API to DockerHub
 
+# Trigger
 on:
     workflow_dispatch:
 
@@ -14,7 +16,7 @@ on:
 jobs:
     build-and-deploy:
         name: Build and deploy Docker Image
-        runs-on: ubuntu-latest
+        runs-on: aws-hosted-runner
 
         steps:
             - name: Checkout code 
@@ -36,7 +38,7 @@ jobs:
                 docker push ${{ secrets.DOCKERHUB_USERNAME }}/flask-student-api:v1.0
 
     notify-success:
-        name: Sucess Notification via Email
+        name: Success Notification via Email
         runs-on: ubuntu-latest
         needs: build-and-deploy
         if: success() # only run if build-and-deploy job is successful
@@ -90,3 +92,11 @@ jobs:
                      - Commit: ${{ github.sha }}
 
                    Thank you!
+
+    run-docker-compose:
+      name: Run docker compose
+      runs-on: ubuntu-latest
+      needs: notify-success
+      steps:
+        - name: Run Docker Container
+          run: docker-compose up -d

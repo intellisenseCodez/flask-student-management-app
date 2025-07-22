@@ -5,6 +5,8 @@ from app import app, db
 from app.models.student import Student
 from app.models.course import Course
 from app.models.enrollment import Enrollment
+from app.routes.metrics_api import monitor_request, track_db_operation
+
 
 
 @app.route("/api/v1.0/course/create", methods=['POST'])
@@ -23,6 +25,8 @@ def create_course():
         if not all(field in data for field in required_fields):
             raise BadRequest(f"Missing required fields. Required: {required_fields}")
         
+        track_db_operation('read')
+
         # Check if course already exists
         if Course.query.filter_by(title=data['title']).first():
             raise Conflict("Course already exits")
@@ -31,6 +35,8 @@ def create_course():
         if Course.query.filter_by(code=data['code']).first():
             raise Conflict("Course Code already taken")
     
+        track_db_operation('create')  # For create operations
+
         # serialization
         new_course = Course(title = data["title"].title().strip(),
                             code = data["code"].upper().strip())

@@ -5,3 +5,5 @@ Flask-SQLAlchemy
 Flask-CORS
 Flask-Migrate
 gunicorn
+prometheus_client
+psutil
