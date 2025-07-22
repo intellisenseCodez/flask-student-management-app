@@ -95,7 +95,7 @@ jobs:
 
     run-docker-compose:
       name: Run docker compose
-      runs-on: ubuntu-latest
+      runs-on: aws-hosted-runner
       needs: notify-success
       steps:
         - name: Run Docker Container
