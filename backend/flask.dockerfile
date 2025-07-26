@@ -31,10 +31,10 @@ COPY . .
 
 
 # Copy the MySQL wait script into the container
-COPY wait-for-mysql.sh .
+# COPY wait-for-mysql.sh .
 
 # Make the wait script executable
-RUN chmod +x wait-for-mysql.sh
+# RUN chmod +x wait-for-mysql.sh
 
 # Set environment variables for Flask
 ENV FLASK_APP=main.py
@@ -46,7 +46,7 @@ EXPOSE 8080
 
 
 # Run wait-for-mysql, apply migrations, then start Flask server
-CMD ["sh", "-c", "./wait-for-mysql.sh && flask db upgrade && flask run --host=0.0.0.0 --port=8080"]
+CMD ["sh", "-c", "flask db upgrade && flask run --host=0.0.0.0 --port=8080"]
 
 
 

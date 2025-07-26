@@ -13,9 +13,14 @@ services:
     env_file: ".env"
     environment:
       - DATABASE_URL=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}
-      - PROMETHEUS_MULTIPROC_DIR=/tmp
     depends_on:
-      - database
+      database:
+        condition: service_healthy 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]  
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 
   # database service
@@ -32,6 +37,11 @@ services:
       - 3307:3306
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
   
 
   # frontend service
