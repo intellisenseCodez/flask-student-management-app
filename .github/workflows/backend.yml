@@ -97,14 +97,18 @@ jobs:
       name: Run docker compose
       runs-on: aws-self-hosted
       needs: notify-success
+      
       steps:
-        - name: Export all Environment Variable
+        - name: Create .env file
           run: |
-            export DOCKERHUB_USERNAME=${{ vars.DOCKERHUB_USERNAME }}
-            export MYSQL_USER=${{ vars.MYSQL_USER }}
-            export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-            export MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
-            export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
-            export DATABASE_URL=mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
+            cat <<EOF > .env
+            DOCKERHUB_USERNAME=${{ vars.DOCKERHUB_USERNAME }}
+            MYSQL_USER=${{ vars.MYSQL_USER }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
+            MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            DATABASE_URL=mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
+            EOF
+            
         - name: Run Docker Container
           run: docker compose up -d
