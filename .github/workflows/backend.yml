@@ -16,7 +16,7 @@ on:
 jobs:
     build-and-deploy:
         name: Build and deploy Docker Image
-        runs-on: aws-hosted-runner
+        runs-on: aws-self-hosted
 
         steps:
             - name: Checkout code 
