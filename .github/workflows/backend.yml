@@ -95,7 +95,7 @@ jobs:
 
     run-docker-compose:
       name: Run docker compose
-      runs-on: aws-hosted-runner
+      runs-on: aws-self-hosted
       needs: notify-success
       steps:
         - name: Export all Environment Variable
