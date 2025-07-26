@@ -101,10 +101,10 @@ jobs:
         - name: Export all Environment Variable
           run: |
             export DOCKERHUB_USERNAME=${{ vars.DOCKERHUB_USERNAME }}
-            export MYSQL_USER = ${{ vars.MYSQL_USER }}
-            export MYSQL_PASSWORD = ${{ secrets.MYSQL_PASSWORD }}
-            export MYSQL_DATABASE = ${{ vars.MYSQL_DATABASE }}
-            export MYSQL_ROOT_PASSWORD = ${{ secrets.MYSQL_ROOT_PASSWORD }}
-            export DATABASE_URL= mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
+            export MYSQL_USER=${{ vars.MYSQL_USER }}
+            export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            export MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
+            export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            export DATABASE_URL=mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
         - name: Run Docker Container
           run: docker-compose up -d
