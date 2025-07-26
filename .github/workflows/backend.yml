@@ -107,4 +107,4 @@ jobs:
             export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
             export DATABASE_URL=mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
         - name: Run Docker Container
-          run: docker-compose up -d
+          run: docker compose up -d
