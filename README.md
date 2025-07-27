@@ -22,6 +22,9 @@ It showcases full-stack application development, container orchestration, and pr
 Here's a simplified architecture diagram:
 ```bash
 flask-student-management-app
+.github/workflows/
+    ├── backend.yml.            # implement CICD workflow for the backend  codebase
+    ├── frontend.yml.            # implement CICD workflow for the frontend  codebase
 backend/
     ├── app/
     │   ├── models/           # SQLAlchemy models for Student, Course, Enrollment
@@ -344,6 +347,174 @@ Once your Flask backend is up and running (either locally or via Docker), you ca
 
 
 ![postman ](./images/postman.png)
+
+
+## Implementing a CICD Pipeline
+
+This project includes a CI/CD pipeline that automatically builds, pushes, and deploys the Flask API as a Docker image whenever changes are made to the backend codebase. It is implemented using **GitHub Actions** and a **self-hosted AWS runner**.
+
+The CI/CD workflow is defined in `.github/workflows/backend.yml`.yml. It contains the following jobs:
+
+## 1. Build and Deploy Docker Image
+
+- **Trigger**:
+  
+  The workflow runs when:
+  
+  - A push is made to the master branch with changes in backend/**.
+  
+  - The workflow file itself `(.github/workflows/backend.yml)` is updated.
+  
+  - It can also be triggered manually using workflow_dispatch.
+
+- **Steps**:
+
+  1. **Checkout Code**:
+  
+    Uses `actions/checkout@v4` to pull the latest code from GitHub.
+      
+  2. Build Flask Docker Image:
+  
+     Builds the backend image using the flask.dockerfile:
+
+     ```bash
+     docker build --file backend/flask.dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/flask-student-api:v1.0 backend
+     ```
+  3. **Login to Docker Hub**:
+
+     Authenticates with Docker Hub using docker/login-action@v3 and secrets:
+     
+     * DOCKERHUB_USERNAME
+     * DOCKERHUB_TOKEN
+
+  4. **Push Image to Docker Hub**:
+  
+     Pushes the image to the Docker Hub registry:
+
+     ```bash
+     docker push ${{ secrets.DOCKERHUB_USERNAME }}/flask-student-api:v1.0
+     ```
+
+## 2. Email Notifications
+Two notification jobs are configured to inform the team of pipeline status:
+
+- **notify-success**: Sends an email if the build-and-deploy job succeeds.
+
+- **notify-fail**: Sends an email if the build-and-deploy job fails.
+
+Emails are sent using the dawidd6/action-send-mail@v6 action and the following secrets:
+
+- MAIL_USERNAME
+
+- MAIL_PASSWORD
+
+- RECEIVER_EMAIL_ADDERESS
+
+- SENDER_EMAIL_ADDERESS
+
+
+## 3. Run Docker Compose (Deployment Stage)
+Once the image is successfully pushed to Docker Hub, the pipeline:
+
+- Generates a `.env` file on the self-hosted AWS runner, using variables and secrets from GitHub:
+
+```bash
+cat <<EOF > .env
+DOCKERHUB_USERNAME=${{ vars.DOCKERHUB_USERNAME }}
+MYSQL_USER=${{ vars.MYSQL_USER }}
+MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}
+MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+DATABASE_URL=mysql+pymysql://${{ vars.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@database:3306/${{ vars.MYSQL_DATABASE }}
+EOF
+```
+
+- Runs Docker Compose to start the Flask API and MySQL containers:
+
+```bash
+docker compose up -d
+```
+
+## Environment Variables and Secrets
+The workflow depends on the following secrets and repository variables configured in the repository settings:
+
+## Secrets
+- DOCKERHUB_USERNAME – Docker Hub username.
+
+- DOCKERHUB_TOKEN – Docker Hub access token or password.
+
+- MYSQL_PASSWORD – Database user password.
+
+- MYSQL_ROOT_PASSWORD – MySQL root password.
+
+- MAIL_USERNAME – Email SMTP username.
+
+- MAIL_PASSWORD – Email SMTP password.
+
+- RECEIVER_EMAIL_ADDERESS – Email address to receive notifications.
+
+- SENDER_EMAIL_ADDERESS – Email address used as the sender.
+
+## Repository Variables
+- DOCKERHUB_USERNAME – Docker Hub username (can also be a secret).
+
+- MYSQL_USER – MySQL user.
+
+- MYSQL_DATABASE – MySQL database name.
+
+
+## How to Set Up an AWS Self-Hosted Runner
+
+### 1. Launch an EC2 Instance
+- Go to AWS EC2 Console.
+
+- Launch an instance (e.g., Ubuntu 22.04 LTS or Amazon Linux 2).
+
+- Choose an instance type (e.g., t2.micro or larger).
+
+- Configure security groups:
+  
+  - Allow SSH (22).
+  - Allow HTTP (80), HTTPS (443), and Custom TCP (8080) for your Flask API.
+
+- Download the `.pem` key for SSH access.
+
+### 2. Install Dependencies
+
+- Open an SSH client.
+- Locate your private `.pem` key file.
+- Run this command, if necessary, to ensure your key is not publicly viewable.
+```bash
+chmod 400 "github-action-runner-login.pem"
+```
+- Connect to your instance using its Public DNS:
+```bash
+ssh -i "your-private-pem-file.pem" ubuntu@your-public-DNS
+```
+
+- [Install Docker](https://docs.docker.com/engine/install/ubuntu/)
+- [Install Docker Compose](https://docs.docker.com/compose/install/linux/)
+
+(Log out and log back in for changes to take effect.)
+
+### 3. Create a Self-Hosted Runner on GitHub
+- Go to your GitHub repository → Settings → Actions → Runners → New self-hosted runner.
+
+- Select Linux as the platform.
+
+- Follow the instructions to download and configure the runner.
+
+## Prepare Environment for CI/CD
+- Ensure Docker and Docker Compose are installed and running.
+
+- Your CI/CD workflow will generate a .env file on the self-hosted runner during deployment.
+
+- The runner will execute docker compose up -d to start the Flask API and database.
+
+
+Testing the Deployment
+
+
 
 
 
